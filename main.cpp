@@ -2,7 +2,7 @@
 
 int main()
 {
-    Game game(900, 900, "Documentation");
+    Game game(900, 900, "Super Amazing Game");
     while (game.isRunning)
     {
         game.run();

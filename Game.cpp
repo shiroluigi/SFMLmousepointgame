@@ -1,12 +1,12 @@
 #include "Game.h"
 
+#define EXIT -1234
+
 Game::Game(int x, int y, std::string title)
 {
 	this->initwindow(x, y, title);
 	this->initEntities();
 	this->initStates();
-	this->s1 = false;
-	this->s0 = false;
 }
 
 Game::~Game()
@@ -41,10 +41,12 @@ void Game::initEntities()
 void Game::initStates()
 {
 	//state 0 ->menu
-	states_vector.push_back(std::move(new mainmenu(this->window, this->window)));
-	//state 1
+	states_vector[0] = (std::move(new mainmenu(this->window, this->window)));
+	//state 1 ->game
 	//states_vector.push_back(std::move(new maingame(this->window)));
-	//this->stateNumber = 1;
+	//state 2 -> help
+	//states_vector.push_back(std::move(new help(this->window, this->window)));
+	this->stateNumber = 0;
 }
 
 void Game::pollevents()
@@ -67,20 +69,45 @@ void Game::render()
 
 void Game::update()
 {
-	if (this->states_vector[this->stateNumber]->getNextState() == 1 && s0 == false)
+	this->states_vector[this->stateNumber]->update();
+	if (this->states_vector[this->stateNumber]->getNextState() == 1)
 	{
-		s0 = true;
 		this->stateNumber = 1;
 		states* s = this->states_vector[0];
 		states_vector[0] = nullptr;
 		delete s;
-		states_vector.push_back(std::move(new maingame(this->window)));
+		states_vector[1] = (std::move(new maingame(this->window)));
 	}
-	if (this->states_vector[this->stateNumber]->getNextState() > 1)
+	else if (this->states_vector[this->stateNumber]->getNextState()  ==  2)
 	{
+		this->stateNumber = 2;
+		states* s = this->states_vector[0];
+		states_vector[0] = nullptr;
+		delete s;
+		states_vector[2] = (std::move(new help(this->window,this->window)));
+	}
+	else if (this->states_vector[this->stateNumber]->getNextState() == 0)
+	{
+		this->stateNumber = 0;
+		for(int i=1;i<3;i++)
+		{
+			states* s = this->states_vector[i];
+			states_vector[i] = nullptr;
+			delete s;
+		}
+		states_vector[0] = (std::move(new mainmenu(this->window, this->window)));
+	}
+	else if (this->states_vector[this->stateNumber]->getNextState() == EXIT)
+	{
+		this->stateNumber = EXIT;
+		for (int i = 1;i < 3;i++)
+		{
+			states* s = this->states_vector[i];
+			states_vector[i] = nullptr;
+			delete s;
+		}
 		this->isRunning = false;
 	}
-	this->states_vector[this->stateNumber]->update();
 }
 void Game::run()
 {

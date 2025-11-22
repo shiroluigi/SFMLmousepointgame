@@ -3,6 +3,7 @@
 #include <iostream>
 #include "maingame.h"
 #include "mainmenu.h"
+#include "help.h"
 #include "states.h"
 class Game
 {
@@ -16,12 +17,11 @@ private:
 	void initStates();
 	void render();
 	void update();
-	std::vector<states*> states_vector;
+	states* states_vector[3];
 	int stateNumber;
 	int prevstate = 0;
+	int currentState = 0;
 	sf::RenderWindow* window = nullptr;
-	bool s1;
-	bool s0;
 public: 
 	bool isRunning = false;
 	void run();

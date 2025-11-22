@@ -29,7 +29,7 @@ private:
 	float dt;
 	sf::Clock dtClock;
 	int countstart;
-	int nextGameState = 1;
+	int nextGameState = -1;
 	sf::Text scoreText;
 	sf::Font font;
 	int score;

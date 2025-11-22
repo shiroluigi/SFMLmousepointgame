@@ -1,25 +1,20 @@
 #pragma once
 #include "states.h"
 
-class mainmenu : public states
-{
+class help : public states {
 public:
-	mainmenu(sf::Window* window,sf::RenderTarget* target);
-	~mainmenu();
+	help(sf::RenderWindow* window, sf::RenderTarget* target);
+	~help();
 	void render();
 	void update();
-	int nextWindow();
 	int getNextState();
 private:
-	sf::Sprite START_GAME, QUIT, HELP;
+	sf::Sprite BACK;
 	void initButtons();
 	int nextPage = -1;
 	void checkClickBounds();
 	void loadSound();
 	sf::RenderTarget* target;
 	sf::Window* window;
-	sf::Sound bgm;
-	sf::SoundBuffer sb;
 	sf::Sprite bg;
 };
-
