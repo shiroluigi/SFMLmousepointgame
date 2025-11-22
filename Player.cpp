@@ -65,6 +65,8 @@ void Player::handleUserInputs(float dt, sf::Window &window)
 	//move the player to the direction of the mouse
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 	this->playerSprite.move(directionVector *(this->speed * dt));
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	this->playerSprite.move(-directionVector * (this->speed * dt));
 	//Angle Calculations
 	float angle = atan2f(directionVector.x, directionVector.y) * 180/3.1415;
 	angle += 180;
@@ -93,6 +95,10 @@ void Player::setSprite(std::string path)
 	TextureLoader* tl = new TextureLoader();
 	this->playerSprite = tl->getSprite(path);
 	this->playerSprite.setOrigin(this->playerSprite.getLocalBounds().width / 2 , this->playerSprite.getLocalBounds().height / 2);
-	
+	this->playerSprite.setScale(0.5, 0.5);
+}
+
+ sf::Sprite* Player::getSprite() {
+	 return &this->playerSprite;
 }
 

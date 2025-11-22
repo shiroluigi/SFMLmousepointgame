@@ -17,7 +17,7 @@ maingame::~maingame()
 void maingame::initEntities()
 {
 	this->score = 0;
-	this->p1 = new Player("Assets/player.png", this->window);
+	this->p1 = new Player("Assets/player1.png", this->window);
 	this->loadSound(&this->sound,&this->buffer,"Assets/Sounds/hit.wav");
 	this->loadSound(&this->bgm,&this->bgmb,"Assets/Sounds/gametheme.mp3");
 }
@@ -44,7 +44,7 @@ void maingame::update()
 	//check escape
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{
-		this->nextGameState = 9999;
+		this->nextGameState = EXIT;
 	}
 	if (!(this->bgm.getStatus() == sf::Sound::Status::Playing))
 		this->bgm.play();
@@ -74,7 +74,16 @@ void maingame::update()
 		this->enemies[i]->update(dt, this->p1->getPlayerPos(), *this->window);
 	}
 	//this->e1->update(this->dt,this->p1->getPlayerPos(), *this->window);
-	//check collision
+	//check collision for player and enemies
+	for(auto* q : enemies)
+	{
+		if (this->p1->getSprite()->getGlobalBounds().intersects(q->enemySprite.getGlobalBounds()))
+		{
+			this->nextGameState = EXIT;
+			return;
+		}
+	}
+	//check collision for projectiles and enemies
 	for (auto* p : projectiles)
 	{
 		for (auto* q : enemies)
@@ -135,7 +144,7 @@ void maingame::updateDt()
 void maingame::makeProjectiles(std::vector<projectile*>& p, std::vector<float>& pa)
 {
 	countstart++;
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E) && countstart > 100)
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left) && countstart > 100)
 	{
 		this->countstart = 0;
 		//std::cout << "Making Projectile" << std::endl;
@@ -150,8 +159,19 @@ void maingame::spawnEnemies(std::vector<Enemy*>& e)
 {
 	if (e.size() < 8)
 	{
+		//enemies cannot spawn on top of player
+		int socialDistancing = 300;
+		sf::Vector2f playerPos = p1->getSprite()->getPosition();
 		Enemy* en = new Enemy(rand() % this->window->getSize().x, rand() % this->window->getSize().y, "Assets/enemy.png", this->window);
+		sf::Vector2f enemyPos = en->enemySprite.getPosition();
+		//check distance on both axes
+		if (std::abs(enemyPos.x - playerPos.x) < socialDistancing &&
+			std::abs(enemyPos.y - playerPos.y) < socialDistancing)
+		{
+			delete en;
+			return;
+		}
 		e.push_back(std::move(en));
-		//std::cout << sizeof(en) << std::endl;
+		//std::cout << sizeof(en) << std::endl;eeeee
 	}
 }

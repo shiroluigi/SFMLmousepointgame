@@ -5,7 +5,7 @@ Enemy::Enemy(int x, int y , std::string path, sf::RenderTarget* target)
 	this->window = target;
 	this->setSprite(path);
 	this->enemySprite.setPosition(x, y);
-	this->speed = 100;
+	this->speed = 50;
 
 }
 

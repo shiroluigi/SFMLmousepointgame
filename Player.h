@@ -11,6 +11,7 @@ struct Player
 	sf::Vector2f getPos();
 	float getPlayerAngle();
 	sf::Vector2f getPlayerPos();
+	sf::Sprite* getSprite();
 private:
 	void setSprite(std::string path);
 	sf::Sprite playerSprite;

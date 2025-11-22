@@ -6,6 +6,7 @@
 #include "Enemy.h"
 #include "cstdlib"
 #include "TextureLoader.h"
+#include "constants.h"
 
 class states
 {

@@ -1,7 +1,5 @@
 #include "Game.h"
 
-#define EXIT -1234
-
 Game::Game(int x, int y, std::string title)
 {
 	this->initwindow(x, y, title);

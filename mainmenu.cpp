@@ -72,7 +72,7 @@ void mainmenu::checkClickBounds()
 		}
 		else if (this->QUIT.getGlobalBounds().contains(mouseposonclick))
 		{
-			this->nextPage = -1234;
+			this->nextPage = EXIT;
 		}
 		else if (this->HELP.getGlobalBounds().contains(mouseposonclick))
 		{
