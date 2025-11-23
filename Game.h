@@ -5,6 +5,8 @@
 #include "mainmenu.h"
 #include "help.h"
 #include "states.h"
+#include "GameOver.h"
+
 class Game
 {
 public:
@@ -17,11 +19,13 @@ private:
 	void initStates();
 	void render();
 	void update();
-	states* states_vector[3];
+	states* states_vector[4];
 	int stateNumber;
 	int prevstate = 0;
 	int currentState = 0;
 	sf::RenderWindow* window = nullptr;
+	sf::Image icon;
+	void clearAllStates();
 public: 
 	bool isRunning = false;
 	void run();

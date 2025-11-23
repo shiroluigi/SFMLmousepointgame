@@ -19,6 +19,14 @@ void Game::initwindow(int x, int y, std::string title)
 	{
 		std::cout << "Error" << std::endl;
 	}
+	TextureLoader* tl = new TextureLoader();
+	if (this->icon.loadFromFile("Assets/player1.png")) {
+		this->window->setIcon(this->icon.getSize().x, this->icon.getSize().y ,icon.getPixelsPtr());
+	}
+	else {
+		std::cout << "Icon Error" << std::endl;
+	}
+	delete tl;
 	isRunning = true;
 }
 
@@ -29,11 +37,6 @@ void Game::initEntities()
 	this->bg.setPosition(this->window->getSize().x / 2, this->window->getSize().y / 2);
 	this->bg.setOrigin(this->bg.getLocalBounds().width / 2, this->bg.getLocalBounds().height / 2);
 	this->bg.setScale(this->window->getSize().x / this->bg.getLocalBounds().width, this->window->getSize().y / this->bg.getLocalBounds().height);
-	/*
-	this->g = new maingame(this->window);
-	this->mm = new mainmenu(this->window, this->window);
-	this->s = new mainmenu(this->window, this->window);
-	*/
 }
 
 void Game::initStates()
@@ -71,40 +74,42 @@ void Game::update()
 	if (this->states_vector[this->stateNumber]->getNextState() == 1)
 	{
 		this->stateNumber = 1;
-		states* s = this->states_vector[0];
-		states_vector[0] = nullptr;
-		delete s;
-		states_vector[1] = (std::move(new maingame(this->window)));
+		this->clearAllStates();
+		states_vector[this->stateNumber] = (std::move(new maingame(this->window)));
 	}
 	else if (this->states_vector[this->stateNumber]->getNextState()  ==  2)
 	{
 		this->stateNumber = 2;
-		states* s = this->states_vector[0];
-		states_vector[0] = nullptr;
-		delete s;
-		states_vector[2] = (std::move(new help(this->window,this->window)));
+		this->clearAllStates();
+		states_vector[this->stateNumber] = (std::move(new help(this->window,this->window)));
 	}
 	else if (this->states_vector[this->stateNumber]->getNextState() == 0)
 	{
 		this->stateNumber = 0;
-		for(int i=1;i<3;i++)
-		{
-			states* s = this->states_vector[i];
-			states_vector[i] = nullptr;
-			delete s;
-		}
-		states_vector[0] = (std::move(new mainmenu(this->window, this->window)));
+		this->clearAllStates();
+		states_vector[this->stateNumber] = (std::move(new mainmenu(this->window, this->window)));
+	}
+	else if (this->states_vector[this->stateNumber]->getNextState() == 3)
+	{
+		this->stateNumber = 3;
+		this->clearAllStates();
+		states_vector[this->stateNumber] = (std::move(new GameOver(this->window, this->window)));
 	}
 	else if (this->states_vector[this->stateNumber]->getNextState() == EXIT)
 	{
 		this->stateNumber = EXIT;
-		for (int i = 1;i < 3;i++)
-		{
-			states* s = this->states_vector[i];
-			states_vector[i] = nullptr;
-			delete s;
-		}
+		this->clearAllStates();
 		this->isRunning = false;
+	}
+}
+
+void Game::clearAllStates()
+{
+	for (int i = 0;i <= 3;i++)
+	{
+		states* s = this->states_vector[i];
+		states_vector[i] = nullptr;
+		delete s;
 	}
 }
 void Game::run()

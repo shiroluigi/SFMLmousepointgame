@@ -19,7 +19,7 @@ void maingame::initEntities()
 	this->score = 0;
 	this->p1 = new Player("Assets/player1.png", this->window);
 	this->loadSound(&this->sound,&this->buffer,"Assets/Sounds/hit.wav");
-	this->loadSound(&this->bgm,&this->bgmb,"Assets/Sounds/gametheme.mp3");
+	this->loadSound(&this->bgm,&this->bgmb,"Assets/Sounds/gamebgm1.mp3");
 }
 
 
@@ -44,7 +44,7 @@ void maingame::update()
 	//check escape
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape))
 	{
-		this->nextGameState = EXIT;
+		this->nextGameState = GAMEOVER;
 	}
 	if (!(this->bgm.getStatus() == sf::Sound::Status::Playing))
 		this->bgm.play();
@@ -57,15 +57,11 @@ void maingame::update()
 			|| this->projectiles[i]->getPos().x >  this->window->getSize().x
 			|| this->projectiles[i]->getPos().y > this->window->getSize().y)
 		{
-			//std::cout << "Object is removed" << this->projectiles[i]->getPos().x << " " << this->projectiles[i]->getPos().y;
 			auto* ptr = this->projectiles[i];
-			//std::cout << "before" << this->projectiles.size() << std::endl;
 			this->projectiles.erase(this->projectiles.begin() + i);
-			//std::cout << "after" << this->projectiles.size() << std::endl;
 			delete ptr;
 			continue;
 		}
-		//std::cout << this->dt << std::endl;
 		this->projectiles[i]->update(this->dt);
 	}
 	this->p1->update(this->dt, *this->window);
@@ -73,13 +69,12 @@ void maingame::update()
 	{
 		this->enemies[i]->update(dt, this->p1->getPlayerPos(), *this->window);
 	}
-	//this->e1->update(this->dt,this->p1->getPlayerPos(), *this->window);
 	//check collision for player and enemies
 	for(auto* q : enemies)
 	{
 		if (this->p1->getSprite()->getGlobalBounds().intersects(q->enemySprite.getGlobalBounds()))
 		{
-			this->nextGameState = EXIT;
+			this->nextGameState = GAMEOVER;
 			return;
 		}
 	}
@@ -91,8 +86,6 @@ void maingame::update()
 			if (p->projectileSprite.getGlobalBounds().intersects(q->enemySprite.getGlobalBounds()))
 			{
 				this->score++;
-				//std::cout << sizeof(this->projectiles) << "< projectiles" << std::endl;
-				//std::cout << sizeof(this->enemies) << "< enemies" << std::endl;
 				this->playSound();
 				auto pend = std::remove(projectiles.begin(), projectiles.end(), p);
 				projectiles.erase(pend, projectiles.end());
@@ -100,9 +93,6 @@ void maingame::update()
 				enemies.erase(eend, enemies.end());
 				delete p;
 				delete q;
-				//std::cout << p << std::endl;
-				//std::cout << sizeof(this->projectiles) << "< projectiles" << std::endl;
-				//std::cout << sizeof(this->enemies) << "< enemies" << std::endl;
 			}
 		}
 	}
@@ -111,6 +101,7 @@ void maingame::update()
 void maingame::playSound()
 {
 	this->sound.play();
+	this->sound.setVolume(5);
 }
 void maingame::loadSound(sf::Sound* s,sf::SoundBuffer* sb,std::string path)
 {
@@ -172,6 +163,5 @@ void maingame::spawnEnemies(std::vector<Enemy*>& e)
 			return;
 		}
 		e.push_back(std::move(en));
-		//std::cout << sizeof(en) << std::endl;eeeee
 	}
 }

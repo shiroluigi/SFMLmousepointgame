@@ -84,10 +84,12 @@ void mainmenu::checkClickBounds()
 
 void mainmenu::loadSound()
 {
-	if (!this->sb.loadFromFile("Assets/Sounds/mainmenu_music.mp3"))
+	if (!this->sb.loadFromFile("Assets/Sounds/bgm1.mp3"))
 	{
 		std::cout << "Error";
 	}
 	
 	this->bgm.setBuffer(sb);
+	this->bgm.setVolume(5);
+	this->bgm.setLoop(true);
 }
